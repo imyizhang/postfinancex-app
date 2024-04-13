@@ -1,2 +1,2 @@
-streamlit
-postfinancex
+streamlit==1.33.0
+postfinancex==0.0.1
