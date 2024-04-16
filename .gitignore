@@ -1,0 +1,25 @@
+# Byte-compiled
+__pycache__/
+
+# Distribution / packaging
+build/
+dist/
+*.egg
+*.egg-info/
+
+# Sphinx documentation
+docs/_build/
+docs/build/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Streamlit
+.streamlit/secrets.toml
+
+# PostFinanceX
+.postfinancex/
+
+# Desktop Services Store
+.DS_Store

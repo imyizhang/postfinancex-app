@@ -1,20 +1,7 @@
 import postfinance
 import streamlit as st
 
-
-def new_chat():
-    st.session_state.messages = [
-        {"role": "assistant", "content": "How can I help you?"}
-    ]
-
-
 with st.sidebar:
-    st.sidebar.button(
-        "New chat",
-        on_click=new_chat,
-        help="Clear chat history and start a new chat",
-    )
-
     st.header("Settings")
 
     api_key = st.text_input(
@@ -27,9 +14,9 @@ with st.sidebar:
 
     model = st.selectbox(
         "Model",
-        postfinance.models.list_supported_models("chat"),
+        postfinance.models.list_supported_models("annotation"),
         index=0,
-        help="[Select a model for chat](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-model-choose.html?context=wx&audience=wdp)",
+        help="[Select a model for annotation](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-model-choose.html?context=wx&audience=wdp)",
     )
 
     if model:
@@ -118,13 +105,16 @@ with st.sidebar:
         "[Learn more](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-model-parameters.html?context=wx)"
 
 # Title
-st.title("💬 Chat")
+st.title("💭 Annotate")
 st.caption("👁️🐝Ⓜ️ Powered by IBM watsonx.ai")
 
-# Info
-st.info(
-    "🛠️ Chat with all the PostFinance CC Call transcripts using Retrieval-Augmented Generation (RAG) is coming soon!"
-)
+# File uploader
+# uploaded_file = st.file_uploader(
+#     "Upload your transcript",
+#     type=("txt", "md"),
+# )
+# if uploaded_file:
+#     text = uploaded_file.read().decode("utf-8")
 
 # Text area
 transcript = st.text_area(
@@ -132,16 +122,7 @@ transcript = st.text_area(
     height=200,
 )
 
-# Chat elements
-if "messages" not in st.session_state:
-    st.session_state["messages"] = [
-        {"role": "assistant", "content": "How can I help you?"}
-    ]
-
-for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
-
-if query := st.chat_input():
+if transcript:
     if not api_key:
         st.warning(
             "Please enter your IBM watsonx.ai API key to continue",
@@ -150,17 +131,25 @@ if query := st.chat_input():
         st.stop()
 
     # Get PostFinanceX agent
-    agent = postfinance.Agent(api_key)
+    agent = postfinance.Agent(api_key=api_key)
 
-    st.session_state.messages.append({"role": "user", "content": query})
-    with st.chat_message("user"):
-        st.write(query)
 
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking ..."):
-            response = agent.chat(
+# Button
+submitted = st.button("Submit", type="primary")
+
+# Columns
+response = None
+
+if submitted:
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown(transcript)
+
+    with col2:
+        with st.spinner("Please wait ..."):
+            response = agent.annotate(
                 content=transcript,
-                messages=st.session_state.messages,
                 model=model,
                 params={
                     "decoding_method": "sample" if sampling else "greedy",
@@ -172,10 +161,11 @@ if query := st.chat_input():
                     "min_new_tokens": min_new_tokens,
                     "max_new_tokens": max_new_tokens,
                 },
-                output_parse=True,
+                output_parse=False,
             )
+
         if response:
-            st.write(response)
-            st.session_state.messages.append(
-                {"role": "assistant", "content": response}
-            )
+            st.markdown(response)
+
+if submitted and response:
+    st.info("💡 Please refresh the page to continue")
