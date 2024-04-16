@@ -22,7 +22,7 @@ with st.sidebar:
 
     if model:
         sampling = True
-        temperature = 0.0
+        temperature = 0.1
         top_p = 1.0
         top_k = 50
         random_seed = 42
@@ -51,7 +51,7 @@ with st.sidebar:
                 "Temperature",
                 min_value=0.0,
                 max_value=2.0,
-                value=0.0,
+                value=0.1,
                 help="Higher values lead to greater variability",
             )  # float
 
