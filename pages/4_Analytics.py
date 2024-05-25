@@ -3,10 +3,6 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 
-# Title
-st.title("📊 Analytics")
-st.caption("Powered by Tableau")
-
 # Info
 st.info(
     "This page provides a comprehensive report on the type of calls received"
@@ -18,3 +14,5 @@ tableau_embed_code = """<div class='tableauPlaceholder' id='viz1716650958736' st
 
 # Embed the iframe
 components.html(tableau_embed_code, height=600)
+
+st.caption("Powered by Tableau")
