@@ -1,6 +1,10 @@
 import postfinance
+import logging
 import streamlit as st
 
+logging.basicConfig(level=logging.DEBUG) 
+logging.getLogger('pymongo').setLevel(logging.WARNING)
+logging.debug("This is a debug message") 
 
 def new_chat():
     st.session_state.messages = [
@@ -158,6 +162,20 @@ if query := st.chat_input():
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking ..."):
+            logging.debug("Calling agent.chat with parameters:")
+            logging.debug("Content: %s", transcript)
+            logging.debug("Messages: %s", st.session_state.messages)
+            logging.debug("Model: %s", model)
+            logging.debug("Params: %s", {
+                "decoding_method": "sample" if sampling else "greedy",
+                "temperature": temperature,
+                "top_p": top_p,
+                "top_k": top_k,
+                "random_seed": random_seed,
+                "repetition_penalty": repetition_penalty,
+                "min_new_tokens": min_new_tokens,
+                "max_new_tokens": max_new_tokens,
+            })
             response = agent.chat(
                 content=transcript,
                 messages=st.session_state.messages,
@@ -174,6 +192,7 @@ if query := st.chat_input():
                 },
                 output_parse=True,
             )
+            logging.debug("Agent response: %s", response)
         if response:
             st.write(response)
             st.session_state.messages.append(
