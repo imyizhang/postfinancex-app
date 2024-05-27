@@ -1,33 +1,41 @@
+# import json
+
 import postfinance
 import streamlit as st
 
+# Sidebar
 with st.sidebar:
     st.header("Settings")
 
-    api_key = st.text_input(
-        "IBM watsonx.ai API key",
-        key="api_key",
-        type="password",
-        placeholder="Enter the API key",
-        help="[Get your IBM watsonx.ai API key](https://cloud.ibm.com/apidocs/watsonx-ai)",
-    )
+    # api_key = st.text_input(
+    #     "IBM watsonx.ai API key",
+    #     key="api_key",
+    #     type="password",
+    #     placeholder="Enter the API key",
+    #     help="[Get your IBM watsonx.ai API key](https://cloud.ibm.com/apidocs/watsonx-ai)",
+    # )
 
+    # TODO: Support loading supported models
     model = st.selectbox(
         "Model",
-        postfinance.models.list_supported_models("annotation"),
+        [
+            # "meta-llama/llama-3-70b-instruct",
+            "mistralai/mixtral-8x7b-instruct-v01",
+        ],
         index=0,
-        help="[Select a model for annotation](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-model-choose.html?context=wx&audience=wdp)",
+        help="[Select a model for translation](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-model-choose.html?context=wx&audience=wdp)",
     )
 
+    # TODO: Support loading default model parameters
     if model:
-        sampling = True
+        sampling = False
         temperature = 0.1
         top_p = 1.0
         top_k = 50
-        random_seed = 42
+        random_seed = 0
         repetition_penalty = 1.0
         min_new_tokens = 0
-        max_new_tokens = 1000
+        max_new_tokens = 1024
 
     custom = st.toggle(
         "Custom mode",
@@ -41,7 +49,7 @@ with st.sidebar:
 
         sampling = st.toggle(
             "Sampling decoding",
-            value=True,
+            value=sampling,
             help="Enable Sampling decoding to customize the variability in how tokens are selected",
         )
 
@@ -50,7 +58,7 @@ with st.sidebar:
                 "Temperature",
                 min_value=0.0,
                 max_value=2.0,
-                value=0.1,
+                value=temperature,
                 help="Higher values lead to greater variability",
             )  # float
 
@@ -58,7 +66,7 @@ with st.sidebar:
                 "Top P",
                 min_value=0.0,
                 max_value=1.0,
-                value=1.0,
+                value=top_p,
                 help="Unless you change the value, this setting is not used",
             )  # float
 
@@ -66,30 +74,30 @@ with st.sidebar:
                 "Top K",
                 min_value=0,
                 max_value=100,
-                value=50,
+                value=top_k,
                 help="Higher values lead to greater variability",
             )  # int
 
             random_seed = st.number_input(
                 "Random seed",
-                min_value=1,
+                min_value=0,
                 max_value=4294967295,
-                value=42,
-                help="To produce repeatable results, set the same random seed value every time",
+                value=random_seed,
+                help="To produce repeatable results, set the same random seed value every time; to disable reproducibility, set to 0",
             )  # int
 
         repetition_penalty = st.slider(
             "Repetition penalty",
             min_value=1.0,
             max_value=2.0,
-            value=1.0,
+            value=repetition_penalty,
             help="The higher the penalty, the less likely it is that the result will include repeated text",
         )  # float
 
         min_new_tokens = st.number_input(
             "Min tokens",
             min_value=0,
-            value=0,
+            value=min_new_tokens,
             help="Control the maximum number of tokens in the generated tokens, which must be less than or equal to Max tokens",
         )  # int
 
@@ -98,7 +106,7 @@ with st.sidebar:
             "Max tokens",
             min_value=min_new_tokens,
             max_value=16384,
-            value=1000,
+            value=max_new_tokens,
             help="Control the maximum number of tokens in the generated tokens",
         )  # int
 
@@ -123,36 +131,35 @@ transcript = st.text_area(
 )
 
 if transcript:
-    if not api_key:
-        st.warning(
-            "Please enter your IBM watsonx.ai API key to continue",
-            icon="⚠️",
-        )
-        st.stop()
+    # if not api_key:
+    #     st.warning(
+    #         "Please enter your IBM watsonx.ai API key to continue",
+    #         icon="⚠️",
+    #     )
+    #     st.stop()
 
     # Get PostFinanceX agent
-    agent = postfinance.Agent(api_key=api_key)
+    annotator = postfinance.get_annotator()
 
 
 # Button
 submitted = st.button("Submit", type="primary")
 
-# Columns
+
 response = None
+generated = False
 
 if submitted:
-    col1, col2 = st.columns(2)
+    # JSON output
+    st.markdown("**JSON Output**")
 
-    with col1:
-        st.markdown(transcript)
-
-    with col2:
-        with st.spinner("Please wait ..."):
-            response = agent.annotate(
-                content=transcript,
-                model=model,
-                params={
-                    "decoding_method": "sample" if sampling else "greedy",
+    with st.spinner("Please wait ..."):
+        response = postfinance.annotate(
+            annotator,
+            transcript,
+            params=(
+                {
+                    "decoding_method": "sample",
                     "temperature": temperature,
                     "top_p": top_p,
                     "top_k": top_k,
@@ -160,12 +167,37 @@ if submitted:
                     "repetition_penalty": repetition_penalty,
                     "min_new_tokens": min_new_tokens,
                     "max_new_tokens": max_new_tokens,
-                },
-                output_parse=False,
-            )
+                }
+                if sampling
+                else {
+                    "decoding_method": "greedy",
+                    "repetition_penalty": repetition_penalty,
+                    "min_new_tokens": min_new_tokens,
+                    "max_new_tokens": max_new_tokens,
+                }
+            ),
+            dumps=True,
+        )
 
-        if response:
-            st.markdown(response)
+        generated = True
 
-if submitted and response:
+    if response:
+        st.markdown(f"```json\n{response}\n```")
+
+    # Columns
+    # response = json.loads(response)
+
+    # if response:
+
+    #     col1, col2 = st.columns(2)
+
+    #     with col1:
+    #         st.markdown("**Transcript**")
+    #         st.markdown(transcript)
+
+    #     with col2:
+    #         st.markdown("**Annotation**")
+    #         st.markdown(response["details"])
+
+if submitted and generated:
     st.info("💡 Please refresh the page to continue")

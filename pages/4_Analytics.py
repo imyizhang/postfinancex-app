@@ -10,11 +10,13 @@ st.caption("Powered by Tableau")
 
 # Info
 st.info(
-    "This page provides a comprehensive report on the type of calls received"
+    "This page provides a comprehensive report on the recorded customer calls"
 )
 
 # Tableau embed code
-tableau_embed_code = tableau_embed_code = """<div class='tableauPlaceholder' id='viz1716650958736' style='position: relative'><noscript>
+tableau_embed_code = (
+    tableau_embed_code
+) = """<div class='tableauPlaceholder' id='viz1716650958736' style='position: relative'><noscript>
                                           <a href='#'><img alt='Dashboard ' 
                                           src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;IB&#47;IBMDashboard_17165757578990&#47;Dashboard&#47;1_rss.png' 
                                           style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'>
@@ -38,7 +40,6 @@ tableau_embed_code = tableau_embed_code = """<div class='tableauPlaceholder' id=
                                           hider.style.height = "27px"; hider.style.width = "100%"; hider.style.position = "absolute"; 
                                           hider.style.backgroundColor = "white"; hider.style.zIndex = "2"; hider.style.bottom = "0"; 
                                           divElement.style.position = "relative"; divElement.appendChild(hider)  </script>"""
-
 
 
 # Embed the iframe

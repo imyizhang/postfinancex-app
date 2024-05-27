@@ -1,5 +1,9 @@
+import json
+
 import postfinance
 import streamlit as st
+
+st.set_page_config(layout="wide")
 
 # Sidebar
 with st.sidebar:
@@ -18,20 +22,17 @@ st.title("🔎 Review")
 st.caption("👁️🐝Ⓜ️ Powered by IBM watsonx.ai")
 
 # Get PostFinanceX agent
-agent = postfinance.Agent(
-    st.secrets.ibm_watsonx.api_key,
-    st.secrets.mongodb_atlas.uri,
-)
+mongo_storage = postfinance.mongo_storage_from_uri(st.secrets.mongodb_atlas.uri)
 
 # Select box
-transcript_id = st.selectbox(
+call_id = st.selectbox(
     "Review your transcript",
-    agent.storage.list_transcripts(),
+    mongo_storage.call_ids,
     help="Select a transcript for human review",
 )
 
-# Get transcript
-transcript = agent.storage.get_by_transcript_id(transcript_id)
+# Get call
+call = mongo_storage.get_call_by_id(call_id)
 
 # Tabs
 tab1, tab2 = st.tabs(["📝 Translate", "💭 Annotate"])
@@ -49,17 +50,22 @@ with tab1:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown(transcript["transcript"]["markdown"])
+        detected_language = call["detected_language"]
+        st.markdown(f"**{detected_language}**")
+        st.markdown(call["transcript"])
 
     with col2:
+        translation = call["translation"]
         if edit:
+            st.markdown("**English**")
             updated_translation = st.text_area(
                 "⚠️ Please modify the translation but keep the same Markdown formatting",
-                value=transcript["translation"]["markdown"],
+                value=translation,
                 height=1800,
             )
         else:
-            st.markdown(transcript["translation"]["markdown"])
+            st.markdown("**English**")
+            st.markdown(translation)
 
     # Button
     if edit:
@@ -96,17 +102,26 @@ with tab2:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown(transcript["translation"]["markdown"])
+        st.markdown("**Translation**")
+        st.markdown(call["translation"])
 
     with col2:
+        # TODO: Display transcript annotation with Markdown formatting
+        annotation = json.dumps(
+            {"summary": call["summary"], "details": call["details"]},
+            indent=4,
+            ensure_ascii=False,
+        )
         if edit:
+            st.markdown("**Annotation**")
             updated_annotation = st.text_area(
                 "⚠️ Please modify the annotation but keep the same Markdown formatting",
-                value=transcript["annotation"]["markdown"],
+                value=annotation,
                 height=1800,
             )
         else:
-            st.markdown(transcript["annotation"]["markdown"])
+            st.markdown("**Annotation**")
+            st.markdown(f"```json\n{annotation}\n```")
 
     # Button
     if edit:
