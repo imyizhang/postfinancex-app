@@ -113,7 +113,7 @@ with st.sidebar:
         "[Learn more](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-model-parameters.html?context=wx)"
 
 # Title
-st.title("📝 Translate")
+st.title("📖 Translate")
 st.caption("👁️🐝Ⓜ️ Powered by IBM watsonx.ai")
 
 # File uploader

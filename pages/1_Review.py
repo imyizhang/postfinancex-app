@@ -35,7 +35,7 @@ call_id = st.selectbox(
 call = mongo_storage.get_call_by_id(call_id)
 
 # Tabs
-tab1, tab2 = st.tabs(["📝 Translate", "💭 Annotate"])
+tab1, tab2 = st.tabs(["📖 Translate", "📝 Annotate"])
 
 with tab1:
 

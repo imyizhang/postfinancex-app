@@ -6,11 +6,12 @@ st.set_page_config(layout="wide")
 
 # Title
 st.title("📊 Analytics")
-st.caption("Powered by Tableau")
+st.caption("🖼️ Powered by Tableau")
 
 # Info
 st.info(
-    "This page provides a comprehensive report on the recorded customer calls"
+    "This page provides a comprehensive report on recorded customer calls",
+    icon="🌟",
 )
 
 # Tableau embed code

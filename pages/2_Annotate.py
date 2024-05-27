@@ -19,8 +19,8 @@ with st.sidebar:
     model = st.selectbox(
         "Model",
         [
-            # "meta-llama/llama-3-70b-instruct",
-            "mistralai/mixtral-8x7b-instruct-v01",
+            "meta-llama/llama-3-70b-instruct",
+            # "mistralai/mixtral-8x7b-instruct-v01",
         ],
         index=0,
         help="[Select a model for translation](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-model-choose.html?context=wx&audience=wdp)",
@@ -113,7 +113,7 @@ with st.sidebar:
         "[Learn more](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-model-parameters.html?context=wx)"
 
 # Title
-st.title("💭 Annotate")
+st.title("📝 Annotate")
 st.caption("👁️🐝Ⓜ️ Powered by IBM watsonx.ai")
 
 # File uploader

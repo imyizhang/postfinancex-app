@@ -1,7 +1,6 @@
-import logging
-
 import postfinance
 import streamlit as st
+from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
 from postfinance import Settings
 
 Settings.watsonx_api_key = st.secrets.ibm_watsonx.api_key
@@ -13,6 +12,7 @@ Settings.neo4j_username = st.secrets.neo4j_aura.username
 Settings.neo4j_password = st.secrets.neo4j_aura.password
 Settings.mongo_uri = st.secrets.mongodb_atlas.uri
 Settings.persist_dir = "./.postfinancex/storage"
+# TODO: Optimize global logging for `postfinance` module
 Settings.verbose = True
 
 
@@ -53,13 +53,16 @@ with st.sidebar:
     # TODO: Support loading default model parameters
     if model:
         sampling = True
-        temperature = 0.5
-        top_p = 1.0
+        temperature = 0.6
+        top_p = 0.9
         top_k = 50
         random_seed = 0
         repetition_penalty = 1.0
         min_new_tokens = 0
         max_new_tokens = 1024
+
+    # TODO: Support loading default tools
+    tools = ["graph_qa", "vector_search"]
 
     custom = st.toggle(
         "Custom mode",
@@ -68,6 +71,20 @@ with st.sidebar:
 
     if custom:
         st.divider()
+
+        st.subheader("Tools")
+
+        tools = st.multiselect(
+            "Tools",
+            [
+                "translate",
+                "graph_qa",
+                "vector_search",
+                "summarize",
+            ],
+            default=tools,
+            help="Select tools used for the MRKL system",
+        )
 
         st.subheader("Model parameters")
 
@@ -145,6 +162,25 @@ st.caption("👁️🐝Ⓜ️ Powered by IBM watsonx.ai")
 #     "🛠️ Chat with all the PostFinance CC Call transcripts using Retrieval-Augmented Generation (RAG) is coming soon!"
 # )
 
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.info(
+        "How could I update personal information in my account, especially about name change?",
+        icon="💡",
+    )
+
+with col2:
+    st.info(
+        "What is the most commonly used language in recorded customer calls?",
+        icon="💭",
+    )
+
+with col3:
+    st.info(
+        "Summarize customer needs or purposes of calling in recorded customer calls.",
+        icon="📌",
+    )
+
 # Text area
 # transcript = st.text_area(
 #     "Enter your transcript",
@@ -171,6 +207,7 @@ if query := st.chat_input():
     # Get PostFinanceX agent
 
     Settings.watsonx_model_id = model
+
     if sampling:
         Settings.watsonx_model_params.decoding_method = "sample"
         Settings.watsonx_model_params.top_p = top_p
@@ -186,15 +223,25 @@ if query := st.chat_input():
         Settings.watsonx_model_params.min_new_tokens = min_new_tokens
         Settings.watsonx_model_params.max_new_tokens = max_new_tokens
 
-    agent = postfinance.get_agent_executor()
+    Settings.tools.translate = "translate" in tools
+    Settings.tools.graph_qa = "graph_qa" in tools
+    Settings.tools.vector_search = "vector_search" in tools
+    Settings.tools.summarize = "summarize" in tools
+
+    agent_executor = postfinance.get_agent_executor()
 
     st.session_state.messages.append({"role": "user", "content": query})
     with st.chat_message("user"):
         st.write(query)
 
     with st.chat_message("assistant"):
+        st_callback = StreamlitCallbackHandler(st.container())
         with st.spinner("Thinking ..."):
-            response = postfinance.chat(agent, query)
+            output = agent_executor.invoke(
+                {"input": query}, {"callbacks": [st_callback]}
+            )
+            response = output["output"]
+            # response = postfinance.chat(agent_executor, query)
         if response:
             st.write(response)
             st.session_state.messages.append(
