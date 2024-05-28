@@ -16,6 +16,9 @@ Settings.persist_dir = "./.postfinancex/storage"
 Settings.verbose = True
 
 
+st.set_page_config(layout="wide")
+
+
 def new_chat():
     st.session_state.messages = [
         {"role": "assistant", "content": "How can I help you?"}

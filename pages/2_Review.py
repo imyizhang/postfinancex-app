@@ -115,7 +115,7 @@ with tab2:
         if edit:
             st.markdown("**Annotation**")
             updated_annotation = st.text_area(
-                "⚠️ Please modify the annotation but keep the same Markdown formatting",
+                "⚠️ Please modify the annotation but keep the same JSON formatting",
                 value=annotation,
                 height=1800,
             )
