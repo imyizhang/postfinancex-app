@@ -18,7 +18,7 @@ We are dedicated to a robust and progressive AI Copilot Knowledge Development Jo
 
 ## Deliverables
 
-### PostFinaceX
+### PostFinanceX
 
 [![GitHub](https://badgen.net/badge/icon/GitHub?icon=github&color=black&label)](https://github.com/imyizhang/postfinancex) [![PyPI](https://badgen.net/pypi/v/postfinancex?icon=pypi&color=black&label)](https://www.pypi.org/project/postfinancex)
 
