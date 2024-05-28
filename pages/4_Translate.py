@@ -205,4 +205,4 @@ if submitted:
             st.markdown(response["translation"])
 
 if submitted and generated:
-    st.info("💡 Please refresh the page to continue")
+    st.info("Please refresh the page to continue", icon="💡")
