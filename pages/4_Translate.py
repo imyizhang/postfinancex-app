@@ -3,6 +3,8 @@ import json
 import postfinance
 import streamlit as st
 
+st.set_page_config(layout="wide")
+
 # Sidebar
 with st.sidebar:
     st.header("Settings")

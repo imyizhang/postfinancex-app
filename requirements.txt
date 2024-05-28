@@ -1,2 +1,2 @@
 streamlit>=1.33.0
-postfinancex>=0.0.8
+postfinancex>=0.0.9

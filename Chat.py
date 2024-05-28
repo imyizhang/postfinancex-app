@@ -1,7 +1,8 @@
 import postfinance
 import streamlit as st
-from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
-from postfinance import Settings
+from postfinance import Settings, StreamlitCallbackHandler
+
+st.set_page_config(layout="wide")
 
 Settings.watsonx_api_key = st.secrets.ibm_watsonx.api_key
 Settings.watsonx_url = st.secrets.ibm_watsonx.url
@@ -14,9 +15,6 @@ Settings.mongo_uri = st.secrets.mongodb_atlas.uri
 Settings.persist_dir = "./.postfinancex/storage"
 # TODO: Optimize global logging for `postfinance` module
 Settings.verbose = True
-
-
-st.set_page_config(layout="wide")
 
 
 def new_chat():
@@ -240,11 +238,11 @@ if query := st.chat_input():
     with st.chat_message("assistant"):
         st_callback = StreamlitCallbackHandler(st.container())
         with st.spinner("Thinking ..."):
-            output = agent_executor.invoke(
-                {"input": query}, {"callbacks": [st_callback]}
+            response = postfinance.chat(
+                agent_executor,
+                query,
+                streamlit_callback=st_callback,
             )
-            response = output["output"]
-            # response = postfinance.chat(agent_executor, query)
         if response:
             st.write(response)
             st.session_state.messages.append(

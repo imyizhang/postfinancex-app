@@ -28,9 +28,11 @@ We are dedicated to a robust and progressive AI Copilot Knowledge Development Jo
 
 [![GitHub](https://badgen.net/badge/icon/GitHub?icon=github&color=black&label)](https://github.com/imyizhang/postfinancex) [![PyPI](https://badgen.net/pypi/v/postfinancex?icon=pypi&color=black&label)](https://www.pypi.org/project/postfinancex)
 
+
+
 **Scenario:**
 
-As a developer at PostFinance, I want to further develop the product
+As a developer at PostFinance, I want to further develop new relevant products
 
 **Targeted audience:**
 
@@ -58,15 +60,17 @@ Employees at PostFinance
 
 **Live demo:**
 
-1. First of all, enable custom mode, and **make sure the tools are enabled**: `graph_qa`, `vector_search`
+1. Remeber to **click "New chat"** to clear chat history if there exists any
 
-2. Get started with searching for some facts:
+2. Enable custom mode, and **make sure the tools are enabled: `graph_qa`, `vector_search`**
+
+3. Get started with searching for some facts, **it may take time to load tools and agent, be patient**
 
    ```
    What is the most commonly used language in recorded customer calls?
    ```
 
-3. Try another one:
+4. Try another one
 
    ```
    How many recorded customer calls are there?
@@ -84,15 +88,17 @@ Customers of PostFinance
 
 **Live demo:**
 
-1. First of all, enable custom mode, and **make sure the tools are enabled**: `vector_search`
+1. Remeber to **click "New chat"** to clear chat history if there exists any
 
-2. Get started with a topic on:
+2. Enable custom mode, and **make sure the tools are enabled: `vector_search`**
+
+3. Get started with a topic on, **it may take time to load tools and agent, be patient**
 
    ```
    What is the overdraft fee?
    ```
 
-3. Try another one depending on the response, for example:
+4. Try another one depending on the response, for example
 
    ```
    How could I avoid it?
@@ -142,7 +148,7 @@ Employees at PostFinance
 
 **Live demo:**
 
-1. Get started with a translated transcript (Swiss German) in Markdown format:
+1. Get started with a translated transcript (Swiss German) in Markdown format
 
    ```markdown
    **Skript 10 - Anforderung von Kontodokumenten**
@@ -190,7 +196,7 @@ Employees at PostFinance
 
 **Live demo:**
 
-1. Get started with a translated transcript (English) in Markdown format:
+1. Get started with a translated transcript (English) in Markdown format
 
    ```markdown
    **Script 10 - Request for Account Documents**
