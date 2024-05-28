@@ -18,7 +18,7 @@ We are dedicated to a robust and progressive AI Copilot Knowledge Development Jo
 
 ## Enterprise RAG Solution
 
-![image-20240528132950421](/Users/yizhang/Library/Application Support/typora-user-images/image-20240528132950421.png)
+![PostFinanceX Solution Diagram](https://github.com/imyizhang/postfinancex-app/blob/main/postfinancex_solution_diagram.png)
 
 
 
