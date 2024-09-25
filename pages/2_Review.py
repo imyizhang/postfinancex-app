@@ -42,7 +42,7 @@ call = {
     "detected_language": "German",
     "transcript": "placeholder for transcript",
     "translation": "placeholder for translation",
-    "summery": "placeholder for summary",
+    "summary": "placeholder for summary",
     "details": "placeholder for details",
 }
 
