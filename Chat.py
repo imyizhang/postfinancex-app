@@ -1,20 +1,21 @@
-import postfinance
+# import postfinance
 import streamlit as st
-from postfinance import Settings, StreamlitCallbackHandler
+
+# from postfinance import Settings, StreamlitCallbackHandler
 
 st.set_page_config(layout="wide")
 
-Settings.watsonx_api_key = st.secrets.ibm_watsonx.api_key
-Settings.watsonx_url = st.secrets.ibm_watsonx.url
-Settings.watsonx_project_id = st.secrets.ibm_watsonx.project_id
-Settings.jina_api_key = st.secrets.jina_embeddings.api_key
-Settings.neo4j_uri = st.secrets.neo4j_aura.uri
-Settings.neo4j_username = st.secrets.neo4j_aura.username
-Settings.neo4j_password = st.secrets.neo4j_aura.password
-Settings.mongo_uri = st.secrets.mongodb_atlas.uri
-Settings.persist_dir = "./.postfinancex/storage"
-# TODO: Optimize global logging for `postfinance` module
-Settings.verbose = True
+# Settings.watsonx_api_key = st.secrets.ibm_watsonx.api_key
+# Settings.watsonx_url = st.secrets.ibm_watsonx.url
+# Settings.watsonx_project_id = st.secrets.ibm_watsonx.project_id
+# Settings.jina_api_key = st.secrets.jina_embeddings.api_key
+# Settings.neo4j_uri = st.secrets.neo4j_aura.uri
+# Settings.neo4j_username = st.secrets.neo4j_aura.username
+# Settings.neo4j_password = st.secrets.neo4j_aura.password
+# Settings.mongo_uri = st.secrets.mongodb_atlas.uri
+# Settings.persist_dir = "./.postfinancex/storage"
+# # TODO: Optimize global logging for `postfinance` module
+# Settings.verbose = True
 
 
 def new_chat():
@@ -207,42 +208,43 @@ if query := st.chat_input():
 
     # Get PostFinanceX agent
 
-    Settings.watsonx_model_id = model
+    # Settings.watsonx_model_id = model
 
-    if sampling:
-        Settings.watsonx_model_params.decoding_method = "sample"
-        Settings.watsonx_model_params.top_p = top_p
-        Settings.watsonx_model_params.top_k = top_k
-        Settings.watsonx_model_params.temperature = temperature
-        Settings.watsonx_model_params.random_seed = random_seed
-        Settings.watsonx_model_params.repetition_penalty = repetition_penalty
-        Settings.watsonx_model_params.min_new_tokens = min_new_tokens
-        Settings.watsonx_model_params.max_new_tokens = max_new_tokens
-    else:
-        Settings.watsonx_model_params.decoding_method = "greedy"
-        Settings.watsonx_model_params.repetition_penalty = repetition_penalty
-        Settings.watsonx_model_params.min_new_tokens = min_new_tokens
-        Settings.watsonx_model_params.max_new_tokens = max_new_tokens
+    # if sampling:
+    #     Settings.watsonx_model_params.decoding_method = "sample"
+    #     Settings.watsonx_model_params.top_p = top_p
+    #     Settings.watsonx_model_params.top_k = top_k
+    #     Settings.watsonx_model_params.temperature = temperature
+    #     Settings.watsonx_model_params.random_seed = random_seed
+    #     Settings.watsonx_model_params.repetition_penalty = repetition_penalty
+    #     Settings.watsonx_model_params.min_new_tokens = min_new_tokens
+    #     Settings.watsonx_model_params.max_new_tokens = max_new_tokens
+    # else:
+    #     Settings.watsonx_model_params.decoding_method = "greedy"
+    #     Settings.watsonx_model_params.repetition_penalty = repetition_penalty
+    #     Settings.watsonx_model_params.min_new_tokens = min_new_tokens
+    #     Settings.watsonx_model_params.max_new_tokens = max_new_tokens
 
-    Settings.tools.translate = "translate" in tools
-    Settings.tools.graph_qa = "graph_qa" in tools
-    Settings.tools.vector_search = "vector_search" in tools
-    Settings.tools.summarize = "summarize" in tools
+    # Settings.tools.translate = "translate" in tools
+    # Settings.tools.graph_qa = "graph_qa" in tools
+    # Settings.tools.vector_search = "vector_search" in tools
+    # Settings.tools.summarize = "summarize" in tools
 
-    agent_executor = postfinance.get_agent_executor()
+    # agent_executor = postfinance.get_agent_executor()
 
     st.session_state.messages.append({"role": "user", "content": query})
     with st.chat_message("user"):
         st.write(query)
 
     with st.chat_message("assistant"):
-        st_callback = StreamlitCallbackHandler(st.container())
-        with st.spinner("Thinking ..."):
-            response = postfinance.chat(
-                agent_executor,
-                query,
-                streamlit_callback=st_callback,
-            )
+        # st_callback = StreamlitCallbackHandler(st.container())
+        # with st.spinner("Thinking ..."):
+        #     response = postfinance.chat(
+        #         agent_executor,
+        #         query,
+        #         streamlit_callback=st_callback,
+        #     )
+        response = "thinking ..."
         if response:
             st.write(response)
             st.session_state.messages.append(

@@ -1,6 +1,6 @@
 import json
 
-import postfinance
+# import postfinance
 import streamlit as st
 
 st.set_page_config(layout="wide")
@@ -143,7 +143,8 @@ if transcript:
 
     # Get PostFinanceX agent
 
-    translator = postfinance.get_translator()
+    # translator = postfinance.get_translator()
+    translator = "placeholder for translator"
 
 
 # Button
@@ -158,30 +159,34 @@ if submitted:
     st.markdown("**JSON Output**")
 
     with st.spinner("Please wait ..."):
-        response = postfinance.translate(
-            translator,
-            transcript,
-            params=(
-                {
-                    "decoding_method": "sample",
-                    "temperature": temperature,
-                    "top_p": top_p,
-                    "top_k": top_k,
-                    "random_seed": random_seed,
-                    "repetition_penalty": repetition_penalty,
-                    "min_new_tokens": min_new_tokens,
-                    "max_new_tokens": max_new_tokens,
-                }
-                if sampling
-                else {
-                    "decoding_method": "greedy",
-                    "repetition_penalty": repetition_penalty,
-                    "min_new_tokens": min_new_tokens,
-                    "max_new_tokens": max_new_tokens,
-                }
-            ),
-            dumps=True,
-        )
+        # response = postfinance.translate(
+        #     translator,
+        #     transcript,
+        #     params=(
+        #         {
+        #             "decoding_method": "sample",
+        #             "temperature": temperature,
+        #             "top_p": top_p,
+        #             "top_k": top_k,
+        #             "random_seed": random_seed,
+        #             "repetition_penalty": repetition_penalty,
+        #             "min_new_tokens": min_new_tokens,
+        #             "max_new_tokens": max_new_tokens,
+        #         }
+        #         if sampling
+        #         else {
+        #             "decoding_method": "greedy",
+        #             "repetition_penalty": repetition_penalty,
+        #             "min_new_tokens": min_new_tokens,
+        #             "max_new_tokens": max_new_tokens,
+        #         }
+        #     ),
+        #     dumps=True,
+        # )
+        response = {
+            "detected_language": "German",
+            "translation": "placeholder for translation",
+        }
 
         generated = True
 

@@ -1,6 +1,6 @@
-# import json
+import json
 
-import postfinance
+# import postfinance
 import streamlit as st
 
 st.set_page_config(layout="wide")
@@ -141,7 +141,8 @@ if transcript:
     #     st.stop()
 
     # Get PostFinanceX agent
-    annotator = postfinance.get_annotator()
+    # annotator = postfinance.get_annotator()
+    annotator = "placeholder for annotator"
 
 
 # Button
@@ -156,30 +157,34 @@ if submitted:
     st.markdown("**JSON Output**")
 
     with st.spinner("Please wait ..."):
-        response = postfinance.annotate(
-            annotator,
-            transcript,
-            params=(
-                {
-                    "decoding_method": "sample",
-                    "temperature": temperature,
-                    "top_p": top_p,
-                    "top_k": top_k,
-                    "random_seed": random_seed,
-                    "repetition_penalty": repetition_penalty,
-                    "min_new_tokens": min_new_tokens,
-                    "max_new_tokens": max_new_tokens,
-                }
-                if sampling
-                else {
-                    "decoding_method": "greedy",
-                    "repetition_penalty": repetition_penalty,
-                    "min_new_tokens": min_new_tokens,
-                    "max_new_tokens": max_new_tokens,
-                }
-            ),
-            dumps=True,
-        )
+        # response = postfinance.annotate(
+        #     annotator,
+        #     transcript,
+        #     params=(
+        #         {
+        #             "decoding_method": "sample",
+        #             "temperature": temperature,
+        #             "top_p": top_p,
+        #             "top_k": top_k,
+        #             "random_seed": random_seed,
+        #             "repetition_penalty": repetition_penalty,
+        #             "min_new_tokens": min_new_tokens,
+        #             "max_new_tokens": max_new_tokens,
+        #         }
+        #         if sampling
+        #         else {
+        #             "decoding_method": "greedy",
+        #             "repetition_penalty": repetition_penalty,
+        #             "min_new_tokens": min_new_tokens,
+        #             "max_new_tokens": max_new_tokens,
+        #         }
+        #     ),
+        #     dumps=True,
+        # )
+        response = {
+            "summary": "placeholder for summary",
+            "details": "placeholder for details",
+        }
 
         generated = True
 
@@ -187,19 +192,19 @@ if submitted:
         st.markdown(f"```json\n{response}\n```")
 
     # Columns
-    # response = json.loads(response)
+    response = json.loads(response)
 
-    # if response:
+    if response:
 
-    #     col1, col2 = st.columns(2)
+        col1, col2 = st.columns(2)
 
-    #     with col1:
-    #         st.markdown("**Transcript**")
-    #         st.markdown(transcript)
+        with col1:
+            st.markdown("**Transcript**")
+            st.markdown(transcript)
 
-    #     with col2:
-    #         st.markdown("**Annotation**")
-    #         st.markdown(response["details"])
+        with col2:
+            st.markdown("**Annotation**")
+            st.markdown(response["details"])
 
 if submitted and generated:
     st.info("Please refresh the page to continue", icon="💡")
